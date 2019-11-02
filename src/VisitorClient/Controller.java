@@ -1,4 +1,4 @@
-package AdminClient;
+package VisitorClient;
 
 public class Controller {
 
@@ -8,6 +8,12 @@ public class Controller {
     public Controller(){
 
     }
+
+
+
+
+
+
 
     public void setUI(UI ui){
         this.ui = ui;
