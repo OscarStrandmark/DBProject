@@ -5,9 +5,7 @@ public class Controller {
     private DBConnection conn;
     private UI ui;
 
-    public Controller(){
-
-    }
+    public Controller(){}
 
     public void setUI(UI ui){
         this.ui = ui;

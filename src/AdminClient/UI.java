@@ -74,14 +74,13 @@ public class UI extends JFrame {
     private JButton MemberAdd;
     private JButton MemberRemove;
 
-
     public UI(Controller controller) {
         this.controller = controller;
 
         init();
     }
 
-    private void init(){
+    private void init(){ //Huge mess of Swing-code
         content = new JPanel(new BorderLayout());
         tabbedPane = new JTabbedPane();
         content.add(tabbedPane,BorderLayout.CENTER);
