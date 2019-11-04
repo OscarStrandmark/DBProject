@@ -467,6 +467,11 @@ public class UI extends JFrame {
 
             if(e.getSource() == BandAddNewBtn){
                 System.out.println("add band");
+                String bandName = BandNameJTF.getText();
+                String CoO = BandOriginJTF.getText();
+                String Contact = BandContactJTF.getText();
+
+                controller.addBand(bandName,CoO,Contact);
             }
 
             if (e.getSource() == BandRemoveBtn){

@@ -13,6 +13,7 @@ public class DBConnection {
     public DBConnection(Controller controller){ }
 
     public ResultSet exequteQuery(String query){
+        System.out.println("EXECUTING QUERY: " + query);
         ResultSet rs = null;
         try {
             Connection conn = DriverManager.getConnection("jdbc:postgresql:localhost",USERNAME,PASSWORD);
