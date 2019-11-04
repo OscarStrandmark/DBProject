@@ -16,7 +16,7 @@ public class DBConnection {
         System.out.println("EXECUTING QUERY: " + query);
         ResultSet rs = null;
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql:localhost",USERNAME,PASSWORD);
+            Connection conn = DriverManager.getConnection("jdbc:postgresql:localhost:8965",USERNAME,PASSWORD);
             PreparedStatement ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             conn.close();

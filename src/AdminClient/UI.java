@@ -1,13 +1,16 @@
 package AdminClient;
 
 import com.github.lgooddatepicker.components.DateTimePicker;
+import objects.Concert;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.ArrayList;
 
 public class UI extends JFrame {
 
@@ -58,11 +61,12 @@ public class UI extends JFrame {
     //Concert-tab components
     private JComboBox<String> ConcertStagesCB;
     private JButton ConcertStageBtn;
+    private JButton ConcertRefreshBtn;
     private JTable ConcertScheduleTable;
     private DateTimePicker ConcertTimeDate;
     private JTextField ConcertBandJTF;
     private JButton ConcertAddBtn;
-    private JTextField ConcertRemoveIndexJTF;
+    private JTextField ConcertRemoveBandJTF;
     private JButton ConcertRemoveBtn;
 
 
@@ -295,14 +299,15 @@ public class UI extends JFrame {
         stagePanel.add(padding_93);
 
 
-        //Concert schedule-tab -------------------------------------------------------------------------------------------
+        //Concert schedule-tab
 
-        ConcertStagesCB = new JComboBox<String>(new String[]{"Stage1","Stage2","Stage3"});
+        ConcertStagesCB = new JComboBox<String>();
         ConcertStageBtn = new JButton("Get stage schedule");
+        ConcertRefreshBtn = new JButton("Refresh");
         ConcertTimeDate = new DateTimePicker();
         ConcertBandJTF = new JTextField(20);
         ConcertAddBtn = new JButton("Add concert to current stage");
-        ConcertRemoveIndexJTF = new JTextField(20);
+        ConcertRemoveBandJTF = new JTextField(20);
         ConcertRemoveBtn = new JButton("Remove concert");
 
         JScrollPane tablePane = new JScrollPane();
@@ -314,11 +319,8 @@ public class UI extends JFrame {
 
         LeftPanel.add(new JLabel("Select stage:"));
         LeftPanel.add(ConcertStagesCB);
+        LeftPanel.add(ConcertRefreshBtn);
         LeftPanel.add(ConcertStageBtn);
-
-        JPanel padding_92 = new JPanel();
-        padding_92.setPreferredSize(new Dimension(50,30));
-        LeftPanel.add(padding_92);
 
         LeftPanel.add(new JLabel("Add concert to schedule:"));
 
@@ -349,7 +351,7 @@ public class UI extends JFrame {
         LeftPanel.add(padding_88);
 
         LeftPanel.add(new JLabel("Select band:"));
-        LeftPanel.add(ConcertRemoveIndexJTF);
+        LeftPanel.add(ConcertRemoveBandJTF);
 
         JPanel padding_87 = new JPanel();
         padding_87.setPreferredSize(new Dimension(75,30));
@@ -439,6 +441,7 @@ public class UI extends JFrame {
         MemberRemove.addActionListener(listener);
 
         ConcertStageBtn.addActionListener(listener);
+        ConcertRefreshBtn.addActionListener(listener);
         ConcertAddBtn.addActionListener(listener);
         ConcertRemoveBtn.addActionListener(listener);
 
@@ -472,54 +475,126 @@ public class UI extends JFrame {
                 String Contact = BandContactJTF.getText();
 
                 controller.addBand(bandName,CoO,Contact);
+
+                BandNameJTF.setText("");
+                BandOriginJTF.setText("");
+                BandContactJTF.setText("");
             }
 
             if (e.getSource() == BandRemoveBtn){
                 System.out.println("remove band");
+                String bandName = BandNameRemovalJTF.getText();
+                controller.removeBand(bandName);
+                BandNameRemovalJTF.setText("");
             }
 
             if (e.getSource() == ArtistAddBtn){
                 System.out.println("Add artist");
+                String artistName = ArtistNameJTF.getText();
+                String artistDesc = ArtistDescriptionJTA.getText();
+                controller.addArtist(artistName,artistDesc);
+                ArtistNameJTF.setText("");
+                ArtistDescriptionJTA.setText("");
             }
 
             if (e.getSource() == ArtistRemoveBtn){
                 System.out.println("remove artist");
+                String artistName = ArtistToRemoveJTF.getText();
+                controller.removeArtist(artistName);
+                ArtistToRemoveJTF.setText("");
             }
 
             if (e.getSource() == WorkerAddBtn){
                 System.out.println("add worker");
+                String workerName = WorkerNameJTF.getText();
+                String workeraddress = WorkerAddressJTF.getText();
+                String workerPNbr = WorkerPersonNrJTF.getText();
+                controller.addWorker(workerName,workeraddress,workerPNbr);
+                WorkerNameJTF.setText("");
+                WorkerAddressJTF.setText("");
+                WorkerPersonNrJTF.setText("");
             }
 
             if (e.getSource() == WorkerRemoveBtn){
                 System.out.println("remove worker");
-            }
-
-            if (e.getSource() == ConcertStageBtn){
-                System.out.println("Get stage");
-            }
-
-            if (e.getSource() == ConcertAddBtn){
-                System.out.println("Add concert");
-            }
-
-            if (e.getSource() == ConcertRemoveBtn){
-                System.out.println("Remove concert");
-            }
-
-            if (e.getSource() == MemberAdd){
-                System.out.println("Add member");
-            }
-
-            if (e.getSource() == MemberRemove){
-                System.out.println("Remove member");
+                String workerName = WorkerRemoveJTF.getText();
+                controller.removeWorker(workerName);
+                WorkerRemoveJTF.setText("");
             }
 
             if (e.getSource() == StageAddBtn){
                 System.out.println("Add stage");
+                String stageName = StageNameJTF.getText();
+                String stageAddress = StageAddressJTF.getText();
+                int stageCapacity = Integer.parseInt(StageCapacityJTF.getText());
+                controller.addStage(stageName,stageAddress,stageCapacity);
+                StageNameJTF.setText("");
+                StageAddressJTF.setText("");
+                StageCapacityJTF.setText("");
             }
 
             if (e.getSource() == StageRemoveBtn){
                 System.out.println("Remove stage");
+                String stageName = StageRemoveJTF.getText();
+                controller.removeStage(stageName);
+                StageRemoveJTF.setText("");
+            }
+
+            if (e.getSource() == MemberAdd){
+                System.out.println("Add member");
+                String bandName = MemberBandAdd.getText();
+                String artistName = MemberArtistAdd.getText();
+                controller.addMembership(bandName,artistName);
+                MemberBandAdd.setText("");
+                MemberArtistAdd.setText("");
+            }
+
+            if (e.getSource() == MemberRemove){
+                System.out.println("Remove member");
+                String bandName = MemberBandRemove.getText();
+                String artistName = MemberArtistRemove.getText();
+                controller.removeMembership(bandName,artistName);
+                MemberBandRemove.setText("");
+                MemberArtistRemove.setText("");
+            }
+
+            if (e.getSource() == ConcertRefreshBtn){
+                System.out.println("Refresh");
+                String[] stages = controller.getStages();
+                for(String s : stages){
+                    ConcertStagesCB.addItem(s);
+                }
+            }
+
+            if (e.getSource() == ConcertStageBtn){
+                System.out.println("Get stage");
+                String stageName = ConcertStagesCB.getSelectedItem().toString();
+                ArrayList<Concert> arrayList = controller.getSchedule(stageName);
+
+                UI.TableModel model = new UI.TableModel();
+                for(Concert c : arrayList){
+                    model.addRow(new String[]{c.getBandName(),c.getDate(),c.getTime()});
+                }
+                ConcertScheduleTable.setModel(model);
+            }
+
+            if (e.getSource() == ConcertAddBtn){
+                System.out.println("Add concert");
+                String stageName = ConcertStagesCB.getSelectedItem().toString();
+                String bandName = ConcertBandJTF.getText();
+                Date date = Date.valueOf(ConcertTimeDate.datePicker.getDate());
+                Time time = Time.valueOf(ConcertTimeDate.timePicker.getTime());
+                controller.addConcert(stageName,bandName,date,time);
+                ConcertBandJTF.setText("");
+                ConcertBandJTF.setText("");
+            }
+
+            if (e.getSource() == ConcertRemoveBtn){
+                System.out.println("Remove concert");
+                String bandName = ConcertRemoveBandJTF.getText();
+                String stageName= ConcertStagesCB.getSelectedItem().toString();
+                controller.removeConcert(bandName,stageName);
+                ConcertRemoveBandJTF.setText("");
             }
         }
     }
