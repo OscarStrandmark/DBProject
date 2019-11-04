@@ -604,7 +604,11 @@ public class UI extends JFrame {
         private String[] colNames = new String[] {"Band","Date","Time"};
 
         public TableModel(){
+
             super(new String[] {"Band","Date","Time"},0);
+            addColumn("Band");
+            addColumn("Date");
+            addColumn("Time");
         }
 
         @Override

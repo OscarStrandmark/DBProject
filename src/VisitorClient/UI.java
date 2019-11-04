@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class UI extends JFrame {
 
@@ -56,7 +57,7 @@ public class UI extends JFrame {
         content.add(refreshBtn,BorderLayout.SOUTH);
 
         //SCHEDULEPANE
-        sceneComboBox = new JComboBox<String>(new String[]{"Test1", "Test2", "Test3"});
+        sceneComboBox = new JComboBox<String>();
         scheduleBtnView = new JButton("View schedule");
         scheduleTextPane = new JTextPane();
         JPanel scheduleWest = new JPanel();
@@ -69,7 +70,7 @@ public class UI extends JFrame {
         scheduleTextPane.setEditable(false);
 
         //BANDPANE
-        bandComboBox = new JComboBox<String>(new String[]{"Test1", "Test2", "Test3"});
+        bandComboBox = new JComboBox<String>();
         bandBtnView = new JButton("View band");
         bandTextPane = new JTextPane();
         JPanel bandWest = new JPanel();
@@ -82,7 +83,7 @@ public class UI extends JFrame {
         bandTextPane.setEditable(false);
 
         //ARTISTPANE
-        artistComboBox = new JComboBox<String>(new String[]{"Test1", "Test2", "Test3"});
+        artistComboBox = new JComboBox<String>();
         artistBtnView = new JButton("View artist");
         artistTextPane = new JTextPane();
         JPanel artistWest = new JPanel();
@@ -121,23 +122,36 @@ public class UI extends JFrame {
     private class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if(e.getSource() == refreshBtn){
-                //TODO: Refresh combo boxes
                 System.out.println("refresh");
+
+                ArrayList<String> stages = controller.getStages();
+                sceneComboBox = new JComboBox<String>((String[])stages.toArray());
+
+                ArrayList<String> bands = controller.getBands();
+                bandComboBox = new JComboBox<String>((String[])bands.toArray());
+
+                ArrayList<String> arists = controller.getArtists();
+                artistComboBox = new JComboBox<String>((String[])arists.toArray());
             }
 
             if(e.getSource() == scheduleBtnView){
-                //TODO: View schedule for selected stage
                 System.out.println("schedule");
+                String stage = sceneComboBox.getSelectedItem().toString();
+                String schedule = controller.getSchedule(stage);
+                scheduleTextPane.setText(schedule);
             }
 
             if(e.getSource() == bandBtnView){
-                //TODO: View info about selected band
                 System.out.println("band");
+                String band = bandComboBox.getSelectedItem().toString();
+                String str = controller.getBandInfo(band);
             }
 
             if(e.getSource() == artistBtnView){
-                //TODO: View info about selected artist
                 System.out.println("Artist");
+                String artist = artistComboBox.getSelectedItem().toString();
+                String str = controller.getArtistInfo(artist);
+                artistTextPane.setText(str);
             }
         }
     }
