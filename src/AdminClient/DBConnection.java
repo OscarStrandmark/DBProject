@@ -5,8 +5,9 @@ import java.util.*;
 
 public class DBConnection {
 
-    private static final String USERNAME = "postgres";
-    private static final String PASSWORD = "dbpassword";
+    private static final String URL      = "jdbc:postgresql://localhost:5432/postgres";
+    private static final String USERNAME = "User";
+    private static final String PASSWORD = "password";
 
     private Connection conn;
 
@@ -16,7 +17,7 @@ public class DBConnection {
         System.out.println("EXECUTING QUERY: " + query);
         ResultSet rs = null;
         try {
-            Connection conn = DriverManager.getConnection("jdbc:postgresql:localhost:8965",USERNAME,PASSWORD);
+            Connection conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
             PreparedStatement ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             conn.close();
@@ -24,5 +25,17 @@ public class DBConnection {
             e.printStackTrace();
         }
         return rs;
+    }
+
+    public void exequteUpdate(String query){
+        System.out.println("EXECUTING QUERY: " + query);
+        try {
+            Connection conn = DriverManager.getConnection(URL,USERNAME,PASSWORD);
+            PreparedStatement ps = conn.prepareStatement(query);
+            ps.executeUpdate();
+            conn.close();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package VisitorClient;
 
+import objects.Concert;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -125,26 +127,45 @@ public class UI extends JFrame {
                 System.out.println("refresh");
 
                 ArrayList<String> stages = controller.getStages();
-                sceneComboBox = new JComboBox<String>((String[])stages.toArray());
+                sceneComboBox.removeAllItems();
+                for(Object s : stages){
+                    sceneComboBox.addItem((String)s);
+                }
 
                 ArrayList<String> bands = controller.getBands();
-                bandComboBox = new JComboBox<String>((String[])bands.toArray());
+                bandComboBox.removeAllItems();
+                for(Object s : bands){
+                    bandComboBox.addItem((String)s);
+                }
 
-                ArrayList<String> arists = controller.getArtists();
-                artistComboBox = new JComboBox<String>((String[])arists.toArray());
+                ArrayList<String> artists = controller.getArtists();
+                artistComboBox.removeAllItems();
+                for(Object s : artists){
+                    artistComboBox.addItem((String)s);
+                }
             }
 
             if(e.getSource() == scheduleBtnView){
                 System.out.println("schedule");
                 String stage = sceneComboBox.getSelectedItem().toString();
-                String schedule = controller.getSchedule(stage);
-                scheduleTextPane.setText(schedule);
+                ArrayList<Concert> arrayList = controller.getSchedule(stage);
+
+                String str = "";
+                str += "Viewing schedule for stage: " + stage + "\n";
+                str += "Concerts:\n";
+
+                for(Concert c : arrayList){
+                    str += "Band: " + c.getBandName() + "\n";
+                    str += "    Date & Time: " + c.getDate() + " @ " + c.getTime() + "\n";
+                }
+                scheduleTextPane.setText(str);
             }
 
             if(e.getSource() == bandBtnView){
                 System.out.println("band");
                 String band = bandComboBox.getSelectedItem().toString();
                 String str = controller.getBandInfo(band);
+                bandTextPane.setText(str);
             }
 
             if(e.getSource() == artistBtnView){

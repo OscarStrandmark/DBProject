@@ -62,7 +62,7 @@ public class UI extends JFrame {
     private JComboBox<String> ConcertStagesCB;
     private JButton ConcertStageBtn;
     private JButton ConcertRefreshBtn;
-    private JTable ConcertScheduleTable;
+    private JTextArea ConcertScheduleDisplay;
     private DateTimePicker ConcertTimeDate;
     private JTextField ConcertBandJTF;
     private JButton ConcertAddBtn;
@@ -309,11 +309,8 @@ public class UI extends JFrame {
         ConcertAddBtn = new JButton("Add concert to current stage");
         ConcertRemoveBandJTF = new JTextField(20);
         ConcertRemoveBtn = new JButton("Remove concert");
-
-        JScrollPane tablePane = new JScrollPane();
-        ConcertScheduleTable = new JTable(new TableModel());
-        ConcertScheduleTable.getTableHeader().setReorderingAllowed(false);
-        tablePane.add(ConcertScheduleTable);
+        ConcertScheduleDisplay = new JTextArea();
+        ConcertScheduleDisplay.setEditable(false);
 
         JPanel LeftPanel = new JPanel();
 
@@ -364,7 +361,7 @@ public class UI extends JFrame {
         LeftPanel.add(padding_86);
 
         concertPanel.add(LeftPanel);
-        concertPanel.add(tablePane);
+        concertPanel.add(ConcertScheduleDisplay);
 
         //Band membership-tab
         MemberBandAdd = new JTextField(50);
@@ -560,9 +557,10 @@ public class UI extends JFrame {
 
             if (e.getSource() == ConcertRefreshBtn){
                 System.out.println("Refresh");
-                String[] stages = controller.getStages();
-                for(String s : stages){
-                    ConcertStagesCB.addItem(s);
+                Object[] stages = controller.getStages();
+                ConcertStagesCB.removeAllItems();
+                for(Object s : stages){
+                    ConcertStagesCB.addItem((String)s);
                 }
             }
 
@@ -571,11 +569,16 @@ public class UI extends JFrame {
                 String stageName = ConcertStagesCB.getSelectedItem().toString();
                 ArrayList<Concert> arrayList = controller.getSchedule(stageName);
 
-                UI.TableModel model = new UI.TableModel();
+                String str = "";
+                str += "Viewing schedule for stage: " + stageName + "\n";
+                str += "Concerts:\n";
+
                 for(Concert c : arrayList){
-                    model.addRow(new String[]{c.getBandName(),c.getDate(),c.getTime()});
+                    str += "Band: " + c.getBandName() + "\n";
+                    str += "    Date & Time: " + c.getDate() + " @ " + c.getTime() + "\n";
                 }
-                ConcertScheduleTable.setModel(model);
+
+                ConcertScheduleDisplay.setText(str);
             }
 
             if (e.getSource() == ConcertAddBtn){
